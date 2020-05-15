@@ -18,10 +18,14 @@ class App extends Component {
         }
     }
 
-    handleDelete=(id)=>{
-        const {employees} = this.state;
-        employees.splice(id,1);
-        this.setState({employees});
+    delete =(id) => {
+        const employees = this.state.employees.filter(emp=>{
+            if(emp.id === id){
+                return false
+            }
+            return true
+        })
+        this.setState({employees})
     }
 
     getApiData = () => {
@@ -39,8 +43,8 @@ class App extends Component {
         this.setState({search:e.target.value});
     }
 
-    selectOnChange = (e) => {
-        this.setState({searchBy:e.target.value});
+    selectOnChange = (searchBy) => {
+        this.setState({searchBy});
     }
     setEmployee = (selected) => {
         this.setState({selected});
@@ -61,7 +65,7 @@ class App extends Component {
         const filteredEmployees = this.filter();
 
         const loader = <div className="lds-dual-ring"></div>;
-        let content = isLoading ? loader : <List handleDelete={this.handleDelete} setEmployee={this.setEmployee} employees={filteredEmployees} />
+        let content = isLoading ? loader : <List delete={this.delete} setEmployee={this.setEmployee} employees={filteredEmployees} />
         if(!isLoading && !filteredEmployees.length){
             content = <div className="not-found">Data Not Found</div>
         }
@@ -70,6 +74,10 @@ class App extends Component {
             <Switch>
                 <div className="container">
                     <Route path="/" exact>
+                        <Search searchBy={searchBy} selectOnChange={this.selectOnChange} value={search} getSearch={this.getSearch} />
+                        {content}
+                    </Route>
+                    <Route path="/page/:page" exact>
                         <Search searchBy={searchBy} selectOnChange={this.selectOnChange} value={search} getSearch={this.getSearch} />
                         {content}
                     </Route>
