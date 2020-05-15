@@ -18,6 +18,12 @@ class App extends Component {
         }
     }
 
+    handleDelete=(id)=>{
+        const {employees} = this.state;
+        employees.splice(id,1);
+        this.setState({employees});
+    }
+
     getApiData = () => {
         this.setState({isLoading:true})
         fetch('https://raw.githubusercontent.com/maratgaip/json/master/people.json')
@@ -55,7 +61,7 @@ class App extends Component {
         const filteredEmployees = this.filter();
 
         const loader = <div className="lds-dual-ring"></div>;
-        let content = isLoading ? loader : <List setEmployee={this.setEmployee} employees={filteredEmployees} />
+        let content = isLoading ? loader : <List handleDelete={this.handleDelete} setEmployee={this.setEmployee} employees={filteredEmployees} />
         if(!isLoading && !filteredEmployees.length){
             content = <div className="not-found">Data Not Found</div>
         }
